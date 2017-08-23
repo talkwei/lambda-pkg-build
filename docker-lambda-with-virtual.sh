@@ -9,8 +9,6 @@ do_pip () {
 	}
 
 # Need to replayce joblib/numpy_pickle_utils.py
-# docker cp Research/Lambda-python-code/sklern-fixed/numpy_pickle_utils.py 9740695410e3:/lambda_build
-# mv numpy_pickle_utils.py /lambda_build/lib/python3.6/site-packages/sklearn/externals/joblib/
 
 strip_virtualenv () {
 		echo "original size $(du -sh $VIRTUAL_ENV | cut -f1)"
@@ -48,17 +46,3 @@ main () {
 }
 
 main
-
-# To build a docker images which is replica of AWS Lambda env.
-#docker run -v "$PWD":/var/task lambci/lambda:python3.6 post.predic_handler '{"Age": 38.0,"Pclass": 1.0, "SibSp": 1.0}'
-
-# docker build docker-lambda/python3.6/build/Dockerfile
-# docker run -v $(pwd):/outputs -it lambci/lambda:python3.6 /bin/bash /outputs/build.sh
-# From lambci/lambda:python3.6
-
-# if R is needed
-#yum install -y R.x86_64 --skip-broken
-# Build virtualenv to build the deployment
-
-
-#https://s3.eu-west-2.amazonaws.com/vivantlendingworkstest/Vivi+Score/model3.pkl
