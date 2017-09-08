@@ -2,13 +2,11 @@
 do_pip () {
 		pip install --upgrade pip wheel		
 		pip install numpy==1.13.1
-		pip install scipy==0.19.0
-		pip install scikit-learn==0.18.1
-		cp /app/numpy_pickle_utils.py $VIRTUAL_ENV/lib/python3.6/site-packages/sklearn/externals/joblib/
-		pip install lightgbm==2.0.3
+		pip install scipy==0.19.0   		# It seems scipy==0.20 is not compile with the script.
+		pip install scikit-learn==0.19.0 	# scikit-learn==0.18.0 need to fix numpy_pickle_utils.py under folder of 
+											# 	/lambda_build/lib/python3.6/site-packages/sklearn/externals/joblib/
+		pip install lightgbm==2.0.3 		# 2.0.6 has issue with my model on num_leavs.
 	}
-
-# Need to replayce joblib/numpy_pickle_utils.py
 
 strip_virtualenv () {
 		echo "original size $(du -sh $VIRTUAL_ENV | cut -f1)"
@@ -16,13 +14,10 @@ strip_virtualenv () {
 		find $VIRTUAL_ENV/lib/python3.6/site-packages/ -name "dataset*" | xargs rm -r
 
 		# Can't remove tests files from pandas
-		pip install pandas==0.19.1
-		#mv $VIRTUAL_ENV/lightgbm/* $VIRTUAL_ENV/lib/python3.6/site-packages/.
+		pip install pandas==0.20.3
 		find $VIRTUAL_ENV/lib/python3.6/site-packages/ -name "*.txt" | xargs rm -r
 		find $VIRTUAL_ENV/lib/python3.6/site-packages/ -name "*.so" | xargs strip
-		#ImportError: /var/task/lambda_build/lib/python3.6/site-packages/scipy/sparse/linalg/isolve/_iterative.cpython-36m-x86_64-linux-gnu.so: ELF load command address/offset not properly 
-		
-		
+				
 		
 		find $VIRTUAL_ENV/lib/python3.6/site-packages/ -name "*.pyc" -delete
 		find $VIRTUAL_ENV/lib/python3.6/site-packages/ -type d -empty -delete
@@ -43,6 +38,9 @@ main () {
 
 		
     	strip_virtualenv		
+
+    	pip list
 }
 
 main
+
