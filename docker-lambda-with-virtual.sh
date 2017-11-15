@@ -1,11 +1,10 @@
 #!/bin/bash
 do_pip () {
 		pip install --upgrade pip wheel		
-		pip install numpy==1.13.1
-		pip install scipy==0.19.0   		# It seems scipy==0.20 is not compile with the script.
-		pip install scikit-learn==0.19.0 	# scikit-learn==0.18.0 need to fix numpy_pickle_utils.py under folder of 
-											# 	/lambda_build/lib/python3.6/site-packages/sklearn/externals/joblib/
-		pip install lightgbm==2.0.3 		# 2.0.6 has issue with my model on num_leavs.
+		pip install -r /app/requirements.txt
+		# It seems scipy==0.20 is not compile with the script.
+		# scikit-learn==0.18.0 need to fix numpy_pickle_utils.py under folder of /lambda_build/lib/python3.6/site-packages/sklearn/externals/joblib/
+		# 2.0.6 has issue with my model on num_leavs.
 	}
 
 strip_virtualenv () {

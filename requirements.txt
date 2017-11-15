@@ -1,0 +1,7 @@
+psycopg2==2.7.3.1
+numpy==1.13.3
+scipy==1.0.0
+scikit-learn==0.19.1
+lightgbm==2.0.10
+pandas==0.20.3
+boto3==1.4.7
