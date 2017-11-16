@@ -7,7 +7,7 @@ Docker
 # How to run it
 ./scripts/build.sh
 
-###scipy issue####
+### scipy ###
 can't use scipy==1.0.0 in the builder. It can't be stripped. need to investigate.
 
 ### Reference ###
