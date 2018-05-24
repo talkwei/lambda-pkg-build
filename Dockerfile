@@ -1,5 +1,4 @@
 FROM lambci/lambda:build-python3.6
-MAINTAINER "Vivant" <vivant@lendingworks.co.com>
 
 RUN mkdir /app
 COPY docker-lambda-with-virtual.sh /app/.
