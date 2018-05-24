@@ -7,9 +7,6 @@ Docker
 # How to run it
 ./scripts/build.sh
 
-### scipy ###
-can't use scipy==1.0.0 in the builder. It can't be stripped. need to investigate.
-
 ### Reference ###
 * https://serverlesscode.com/post/deploy-scikitlearn-on-lamba/
 * https://github.com/lambci/docker-lambda
