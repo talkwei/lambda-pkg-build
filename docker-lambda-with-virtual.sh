@@ -1,49 +1,51 @@
 #!/bin/bash
 do_pip () {
-		pip install --upgrade pip wheel		
-		pip install -r /app/requirements.txt
+		pip install --upgrade pip wheel
+		pip install -r requirements.txt
 	}
 
 strip_virtualenv () {
-		echo "original size $(du -sh $VIRTUAL_ENV | cut -f1)"
-		find $VIRTUAL_ENV/lib/python3.6/site-packages/ -name "tests*"| xargs rm -r
-		find $VIRTUAL_ENV/lib/python3.6/site-packages/ -name "dataset*" | xargs rm -r
+		# $1 is VIRTUAL_ENV
+		SITE_PACKAGES=$1/lib/python3.6/site-packages
+		echo "original size $(du -sh $1 | cut -f1)"
+		find $SITE_PACKAGES -name "tests*"| xargs rm -r
+		find $SITE_PACKAGES -name "dataset*" | xargs rm -r
 
 		# Can't remove tests files from pandas
-		pushd $VIRTUAL_ENV/lib/python3.6/site-packages/scipy/.libs && \
+		pushd $SITE_PACKAGES/scipy/.libs && \
 		      rm *; ln ../../numpy/.libs/* . && \
               rm -rf /root/.cache  ; popd
 
-		find $VIRTUAL_ENV/lib/python3.6/site-packages/ -name "*.txt" | xargs rm -r
-		find $VIRTUAL_ENV/lib/python3.6/site-packages/ -name "*.so" | grep -v ufuncs | grep -v fblas | grep -v flapack | \
+		find $SITE_PACKAGES -name "*.txt" | xargs rm -r
+		find $SITE_PACKAGES -name "*.so" | grep -v ufuncs | grep -v fblas | grep -v flapack | \
                                                                     grep -v cython_blas | grep -v cython_lapack | grep -v ellip_harm | \
                                                                     grep -v odepack | grep -v quadpack | grep -v vode | grep -v lsoda | \
                                                                     grep -v iterative | grep -v superlu | grep -v arpack | grep -v trlib | \
                                                                     grep -v lbfgs | grep -v qhull | xargs strip
-		find $VIRTUAL_ENV/lib/python3.6/site-packages/ -name "*.pyc" -delete
-		find $VIRTUAL_ENV/lib/python3.6/site-packages/ -type d -empty -delete
+		find $SITE_PACKAGES -name "*.pyc" -delete
+		find $SITE_PACKAGES -type d -empty -delete
 		echo "current size $(du -sh $VIRTUAL_ENV | cut -f1)"
-	    pushd $VIRTUAL_ENV/lib/python3.6/site-packages/ && zip -r -9 -q /outputs/lambda.zip scipy numpy sklearn pandas pytz lightgbm ; popd
+	  pushd $SITE_PACKAGES
+		zip -r -9 -q lambda.zip scipy numpy sklearn pandas pytz lightgbm
+		popd
+		mv $SITE_PACKAGES/lambda.zip lambda.zip
 	}
 
 main () {
-        apt-get update
-        apt-get install zip unzip
-		pip install virtualenv
-		virtualenv -p /usr/local/bin/python \
+				VIRTUAL_ENV="lambda_build"
+				python3 -m pip install virtualenv
+				virtualenv -p python3 \
 			        --always-copy \
 			        --no-site-packages \
-			        lambda_build
+			        $VIRTUAL_ENV
 
-		source lambda_build/bin/activate
-    
-    	do_pip
+				source $VIRTUAL_ENV/bin/activate
 
-		
-    	strip_virtualenv		
+	    	do_pip
 
-    	pip list
+	    	strip_virtualenv $VIRTUAL_ENV
+
+	    	pip list
 }
 
 main
-
