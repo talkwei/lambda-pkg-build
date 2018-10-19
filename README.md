@@ -1,11 +1,11 @@
 # lambda-pkg-build
-Python 3.6 packages for AWS lambda. 
+Python 3.6 packages for AWS lambda.
 
-# Dependencies
+# Dependencies7
 Docker
 
 # How to run it
-./scripts/build.sh
+./build.sh
 
 ### Reference ###
 * https://serverlesscode.com/post/deploy-scikitlearn-on-lamba/

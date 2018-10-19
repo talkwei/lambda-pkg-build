@@ -26,7 +26,8 @@ strip_virtualenv () {
 		find $SITE_PACKAGES -type d -empty -delete
 		echo "current size $(du -sh $VIRTUAL_ENV | cut -f1)"
 	  pushd $SITE_PACKAGES
-		zip -r -9 -q lambda.zip scipy numpy sklearn pandas pytz lightgbm
+		zip -r -9 -q lambda.zip urllib3 requests idna chardet certifi pytz \
+														pandas numpy pandasscipy sklearn
 		popd
 		mv $SITE_PACKAGES/lambda.zip lambda.zip
 	}
