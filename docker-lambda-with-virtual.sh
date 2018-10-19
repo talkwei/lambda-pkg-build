@@ -1,20 +1,14 @@
 #!/bin/bash
-do_pip () {
-		pip install --upgrade pip wheel
-		pip install -r requirements.txt
-	}
-
 strip_virtualenv () {
-		# $1 is VIRTUAL_ENV
-		SITE_PACKAGES=$1/lib/python3.6/site-packages
+		SITE_PACKAGES=$LAMBDA_BUILD/lib/python3.6/site-packages
 		echo "original size $(du -sh $1 | cut -f1)"
 		find $SITE_PACKAGES -name "tests*"| xargs rm -r
 		find $SITE_PACKAGES -name "dataset*" | xargs rm -r
 
 		# Can't remove tests files from pandas
 		pushd $SITE_PACKAGES/scipy/.libs && \
-		      rm *; ln ../../numpy/.libs/* . && \
-              rm -rf /root/.cache  ; popd
+		    rm *; ln ../../numpy/.libs/* . && \
+          	rm -rf /root/.cache  ; popd
 
 		find $SITE_PACKAGES -name "*.txt" | xargs rm -r
 		find $SITE_PACKAGES -name "*.so" | grep -v ufuncs | grep -v fblas | grep -v flapack | \
@@ -26,27 +20,27 @@ strip_virtualenv () {
 		find $SITE_PACKAGES -type d -empty -delete
 		echo "current size $(du -sh $VIRTUAL_ENV | cut -f1)"
 	  pushd $SITE_PACKAGES
-		zip -r -9 -q lambda.zip urllib3 requests idna chardet certifi pytz \
-														pandas numpy pandasscipy sklearn
+		zip -r -9 -q $VIRTUAL_ENV/lambda.zip \
+				urllib3 requests idna chardet certifi pytz \
+				pandas numpy pandasscipy sklearn
 		popd
-		mv $SITE_PACKAGES/lambda.zip lambda.zip
-	}
+}
 
 main () {
-				VIRTUAL_ENV="lambda_build"
-				python3 -m pip install virtualenv
-				virtualenv -p python3 \
-			        --always-copy \
-			        --no-site-packages \
-			        $VIRTUAL_ENV
+		python3 -m pip install virtualenv
+		python3 -m virtualenv \
+	        --always-copy \
+	        --no-site-packages \
+	        $LAMBDA_BUILD
 
-				source $VIRTUAL_ENV/bin/activate
+		source $LAMBDA_BUILD/bin/activate
 
-	    	do_pip
+		pip install --upgrade pip wheel
+		pip install -r requirements.txt
 
-	    	strip_virtualenv $VIRTUAL_ENV
+  	strip_virtualenv
 
-	    	pip list
+  	pip list
 }
 
 main
