@@ -22,12 +22,17 @@ strip_virtualenv () {
 	  pushd $SITE_PACKAGES
 		zip -r -9 -q $VIRTUAL_ENV/lambda.zip \
 				urllib3 requests idna chardet certifi pytz \
-				pandas numpy pandasscipy sklearn
+				numpy pandas
+		zip -r -9 -q $VIRTUAL_ENV/predictor.zip \
+				urllib3 requests idna chardet certifi pytz simplejson \
+				numpy scipy sklearn xgboost
+		zip -r -9 -q $VIRTUAL_ENV/lambda-all.zip \
+				urllib3 requests idna chardet certifi pytz simplejson \
+				numpy pandas scipy sklearn xgboost
 		popd
 }
 
 main () {
-		python3 -m pip install virtualenv
 		python3 -m virtualenv \
 	        --always-copy \
 	        --no-site-packages \
